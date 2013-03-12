@@ -1,21 +1,17 @@
 package ltg.helioroom;
 
-import ltg.commons.MessageListener;
 import ltg.commons.PhenomenaEvent;
 import ltg.commons.PhenomenaEventHandler;
 import ltg.commons.PhenomenaEventListener;
-import ltg.commons.SimpleXMPPClient;
-
-import org.jivesoftware.smack.packet.Message;
-
 import processing.core.PApplet;
-import processing.core.PFont;
 
 public class HelioRoomClient extends PApplet {
 	private static final long serialVersionUID = 1L;
 
 	// Event Handler
 	private PhenomenaEventHandler peh = null;
+	// Model
+	private HelioRoom hr = new HelioRoom();
 	// Font
 	//private PFont labelsFont;
 
@@ -67,7 +63,7 @@ public class HelioRoomClient extends PApplet {
 	////////////////////////////
 
 	private void processInitEvent(PhenomenaEvent e) {
-		System.out.println("Received init");
+		hr.init(e.getXML());
 	}
 
 

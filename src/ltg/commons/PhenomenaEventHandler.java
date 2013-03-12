@@ -1,7 +1,5 @@
 package ltg.commons;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,8 +7,6 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.dom4j.io.OutputFormat;
-import org.dom4j.io.XMLWriter;
 import org.jivesoftware.smack.packet.Message;
 
 public class PhenomenaEventHandler {
@@ -92,18 +88,7 @@ public class PhenomenaEventHandler {
 
 
 	public static String serializeEvent(PhenomenaEvent pe) {
-		Document event = DocumentHelper.createDocument(pe.getXML());
-		// remove XML declaration
-		StringWriter w = new StringWriter();
-		OutputFormat f =  OutputFormat.createPrettyPrint();
-		f.setSuppressDeclaration(true);
-		XMLWriter xw = new XMLWriter(w, f);
-		try {
-			xw.write(event);
-		} catch (IOException e) {
-			System.err.println("Unable to print to a string? Really dom4j?");
-		}
-		return w.toString();
+		return PhenomenaXMLUtils.removeXMLDeclaration(DocumentHelper.createDocument(pe.getXML()));
 	}
 
 	

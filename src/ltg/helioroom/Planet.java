@@ -1,5 +1,10 @@
 package ltg.helioroom;
 
+import ltg.commons.PhenomenaXMLUtils;
+
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
+
 public class Planet {
 	
 	private String name = null;
@@ -19,6 +24,37 @@ public class Planet {
 		this.startPosition = startPosition;
 		this.representation = representation;
 		this.labelType = labelType;
+	}
+	
+	public Planet (Element planet) throws DocumentException{
+		name = PhenomenaXMLUtils.parseStringElement(planet, "name");
+		color = PhenomenaXMLUtils.parseStringElement(planet, "color");
+		colorName = PhenomenaXMLUtils.parseStringElement(planet, "colorName");
+		classOrbitalTime = PhenomenaXMLUtils.parseDoubleElement(planet, "classOrbitalTime");
+		startPosition = PhenomenaXMLUtils.parseDoubleElement(planet, "startPosition");
+		representation = parseRepresentation(planet, "representation");
+		labelType = parseLabelType(planet, "labelType");
+		
+	}
+	
+	private String parseRepresentation(Element planet, String element) throws DocumentException {
+		String rep = PhenomenaXMLUtils.parseStringElement(planet, element);
+		if (rep.equals(HelioRoom.REP_IMAGE))
+			return HelioRoom.REP_IMAGE;
+		if (rep.equals(HelioRoom.REP_SPHERE))
+			return HelioRoom.REP_SPHERE;
+		throw new DocumentException();
+	}
+	
+	private String parseLabelType(Element planet, String element) throws DocumentException {
+		String label = PhenomenaXMLUtils.parseStringElement(planet, element);
+		if (label.equals(HelioRoom.LABEL_NONE))
+			return HelioRoom.LABEL_NONE;
+		if (label.equals(HelioRoom.LABEL_COLOR))
+			return HelioRoom.LABEL_COLOR;
+		if (label.equals(HelioRoom.LABEL_NAME))
+			return HelioRoom.LABEL_NAME;
+		throw new DocumentException();
 	}
 
 	public String getName() {

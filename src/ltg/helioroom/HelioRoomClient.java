@@ -1,6 +1,9 @@
 package ltg.helioroom;
 
 import ltg.commons.MessageListener;
+import ltg.commons.PhenomenaEvent;
+import ltg.commons.PhenomenaEventHandler;
+import ltg.commons.PhenomenaEventListener;
 import ltg.commons.SimpleXMPPClient;
 
 import org.jivesoftware.smack.packet.Message;
@@ -11,14 +14,10 @@ import processing.core.PFont;
 public class HelioRoomClient extends PApplet {
 	private static final long serialVersionUID = 1L;
 
-	// XMMP client
-	private SimpleXMPPClient xmpp = null;
-	// JSON parser
-	//private JsonParser parser = new JsonParser();
-	// Foraging game
-	//private HelioRoom model = new HelioRoom();
+	// Event Handler
+	private PhenomenaEventHandler peh = null;
 	// Font
-	private PFont labelsFont;
+	//private PFont labelsFont;
 
 
 	public static void main(String[] args) {
@@ -34,18 +33,17 @@ public class HelioRoomClient extends PApplet {
 
 	public void setup() {
 		// Sketch
-		frameRate(1);
 		size(displayWidth/2, displayHeight/2);
-		labelsFont = createFont("Helvetica",16,true);
+		//labelsFont = createFont("Helvetica",16,true);
 		// Logic
-		xmpp = new SimpleXMPPClient("hr_dev_w1@54.243.60.48", "hr_dev_w1");
-		println("Connected to XMPP server and listening");
-		xmpp.registerEventListener(new MessageListener() {
+		peh = new PhenomenaEventHandler("hr_dev_w1@54.243.60.48", "hr_dev_w1");
+		peh.registerHandler("helioroom", new PhenomenaEventListener() {
 			@Override
-			public void processMessage(Message m) {
-				processIncomingData(m.getBody());
+			public void processEvent(PhenomenaEvent e) {
+				processInitEvent(e);
 			}
 		});
+		peh.runAsynchronously();
 	}
 
 
@@ -68,8 +66,8 @@ public class HelioRoomClient extends PApplet {
 	// Event handling methods //
 	////////////////////////////
 
-	public void processIncomingData(String s) {
-		
+	private void processInitEvent(PhenomenaEvent e) {
+		System.out.println("Received init");
 	}
 
 

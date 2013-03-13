@@ -8,7 +8,7 @@ import ltg.commons.PhenomenaXMLUtils;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 
-public class HelioRoom {
+public class HelioRoomModel {
 
 	// Planets representation constants
 	public final static String REP_IMAGE 		= "image";
@@ -30,7 +30,31 @@ public class HelioRoom {
 	private int viewAngleEnd = -1;
 	private List<Planet> planets = null;
 	
+	// Other data
+	public boolean initialized = false;
 	
+	
+	public synchronized long getStartTime() {
+		return startTime;
+	}
+
+	public synchronized String getState() {
+		return state;
+	}
+
+	public synchronized int getViewAngleBegin() {
+		return viewAngleBegin;
+	}
+
+	public synchronized int getViewAngleEnd() {
+		return viewAngleEnd;
+	}
+
+	public synchronized List<Planet> getPlanets() {
+		return planets;
+	}
+
+
 	public synchronized void init(Element e) {
 		try {
 			startTime = PhenomenaXMLUtils.parseIntElement(e, "startTime");
@@ -41,6 +65,12 @@ public class HelioRoom {
 		} catch (DocumentException ex) {
 			System.err.println("Errors initializing HelioRoom model");
 		}
+		initialized = true;
+	}
+	
+	
+	public synchronized boolean isInitialized() {
+		return initialized;
 	}
 
 

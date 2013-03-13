@@ -39,21 +39,21 @@ public class Planet {
 	
 	private String parseRepresentation(Element planet, String element) throws DocumentException {
 		String rep = PhenomenaXMLUtils.parseStringElement(planet, element);
-		if (rep.equals(HelioRoom.REP_IMAGE))
-			return HelioRoom.REP_IMAGE;
-		if (rep.equals(HelioRoom.REP_SPHERE))
-			return HelioRoom.REP_SPHERE;
+		if (rep.equals(HelioRoomModel.REP_IMAGE))
+			return HelioRoomModel.REP_IMAGE;
+		if (rep.equals(HelioRoomModel.REP_SPHERE))
+			return HelioRoomModel.REP_SPHERE;
 		throw new DocumentException();
 	}
 	
 	private String parseLabelType(Element planet, String element) throws DocumentException {
 		String label = PhenomenaXMLUtils.parseStringElement(planet, element);
-		if (label.equals(HelioRoom.LABEL_NONE))
-			return HelioRoom.LABEL_NONE;
-		if (label.equals(HelioRoom.LABEL_COLOR))
-			return HelioRoom.LABEL_COLOR;
-		if (label.equals(HelioRoom.LABEL_NAME))
-			return HelioRoom.LABEL_NAME;
+		if (label.equals(HelioRoomModel.LABEL_NONE))
+			return HelioRoomModel.LABEL_NONE;
+		if (label.equals(HelioRoomModel.LABEL_COLOR))
+			return HelioRoomModel.LABEL_COLOR;
+		if (label.equals(HelioRoomModel.LABEL_NAME))
+			return HelioRoomModel.LABEL_NAME;
 		throw new DocumentException();
 	}
 

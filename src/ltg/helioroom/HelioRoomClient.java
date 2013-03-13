@@ -4,6 +4,8 @@ import ltg.commons.PhenomenaEvent;
 import ltg.commons.PhenomenaEventHandler;
 import ltg.commons.PhenomenaEventListener;
 import processing.core.PApplet;
+import processing.core.PFont;
+import processing.core.PImage;
 
 public class HelioRoomClient extends PApplet {
 	private static final long serialVersionUID = 1L;
@@ -11,9 +13,10 @@ public class HelioRoomClient extends PApplet {
 	// Event Handler
 	private PhenomenaEventHandler peh = null;
 	// Model
-	private HelioRoom hr = new HelioRoom();
-	// Font
-	//private PFont labelsFont;
+	private HelioRoomModel hr = new HelioRoomModel();
+	// Sketch
+	private PImage background = null;
+	private PFont labelsFont;
 
 
 	public static void main(String[] args) {
@@ -29,8 +32,10 @@ public class HelioRoomClient extends PApplet {
 
 	public void setup() {
 		// Sketch
+		frameRate(30);
 		size(displayWidth/2, displayHeight/2);
-		//labelsFont = createFont("Helvetica",16,true);
+		background = loadImage("../resources/stars2.jpeg");
+		labelsFont = createFont("Helvetica",16,true);
 		// Logic
 		peh = new PhenomenaEventHandler("hr_dev_w1@54.243.60.48", "hr_dev_w1");
 		peh.registerHandler("helioroom", new PhenomenaEventListener() {
@@ -44,7 +49,11 @@ public class HelioRoomClient extends PApplet {
 
 
 	public void draw() {
-		
+		if (!hr.isInitialized()) {
+			background(0);
+			return;
+		}
+		drawTiledStarsBackground();
 	}
 
 
@@ -53,7 +62,13 @@ public class HelioRoomClient extends PApplet {
 	// Drawing methods //
 	/////////////////////
 
-	
+	private void drawTiledStarsBackground() {
+		int o_rep = width/background.width;
+		int v_rep = height/background.height;
+		for (int j=0;j<=v_rep;j++)
+			for (int i=0;i<=o_rep;i++)
+				image(background, i*background.width, j*background.height, background.width, background.height);
+	}
 
 
 

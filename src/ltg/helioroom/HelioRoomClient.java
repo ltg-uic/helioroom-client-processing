@@ -17,6 +17,7 @@ public class HelioRoomClient extends PApplet {
 	// Sketch
 	private PImage background = null;
 	private PFont labelsFont;
+	private int planet_diameter;
 
 
 	public static void main(String[] args) {
@@ -34,6 +35,7 @@ public class HelioRoomClient extends PApplet {
 		// Sketch
 		frameRate(30);
 		size(displayWidth/2, displayHeight/2);
+		planet_diameter = (int) (.6*height);
 		background = loadImage("../resources/stars2.jpeg");
 		labelsFont = createFont("Helvetica",16,true);
 		// Logic
@@ -54,6 +56,7 @@ public class HelioRoomClient extends PApplet {
 			return;
 		}
 		drawTiledStarsBackground();
+		drawPlanets();
 	}
 
 
@@ -68,6 +71,17 @@ public class HelioRoomClient extends PApplet {
 		for (int j=0;j<=v_rep;j++)
 			for (int i=0;i<=o_rep;i++)
 				image(background, i*background.width, j*background.height, background.width, background.height);
+	}
+
+
+	private void drawPlanets() {
+		int i = 0;
+		for (Planet p: hr.getPlanets()) {
+			i=i+100;
+			int pc = unhex(p.getColor().substring(2));
+			fill(pc);
+			ellipse(i, height/2, planet_diameter, planet_diameter);
+		}
 	}
 
 

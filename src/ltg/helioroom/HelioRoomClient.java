@@ -37,9 +37,8 @@ public class HelioRoomClient extends PApplet {
 		// Sketch
 		frameRate(30);
 		size(displayWidth/2, displayHeight/2);
-		planet_diameter = (int) (.6*height);
 		background = loadImage("../resources/stars2.jpeg");
-		labelsFont = createFont("Helvetica",16,true);
+		labelsFont = createFont("Helvetica",32,true);
 		// Logic
 		peh = new PhenomenaEventHandler("hr_dev_w1@54.243.60.48", "hr_dev_w1");
 		peh.registerHandler("helioroom", new PhenomenaEventListener() {
@@ -53,13 +52,14 @@ public class HelioRoomClient extends PApplet {
 
 
 	public void draw() {
-		// Return if no data in model
+		// If there is no data in the model draw a black background and return
 		if (!hr.isInitialized()) {
 			background(0);
 			return;
 		}
+		// Draw stars
 		drawTiledStarsBackground();
-		// Draw planets
+		// Draw planets and labels
 		double dt = new Date().getTime() - hr.getStartTime()*1000;
 		drawPlanets(dt);
 	}
@@ -80,11 +80,27 @@ public class HelioRoomClient extends PApplet {
 
 
 	private void drawPlanets(double dt) {
-		// remember... dt is in milliseconds since the beginning of the simulation!
+		// Remember: dt is in milliseconds since the beginning of the simulation!
+		// Calculate diameter
+		planet_diameter = (int) (.6*height);
+		// For each planet...
 		for (Planet p: hr.getPlanets()) {
+			// Get planet color
 			int pc = unhex(p.getColor().substring(2));
 			fill(pc);
+			// Draw planet
 			ellipse(calculatePlanetPosition(p.getStartPosition(), p.getClassOrbitalTime(), dt, p), height/2, planet_diameter, planet_diameter);
+			// Draw label
+			if (p.getLabelType().equals(HelioRoomModel.LABEL_NONE))
+				continue;
+			float l_x = calculatePlanetPosition(p.getStartPosition(), p.getClassOrbitalTime(), dt, p);
+			textFont(labelsFont);
+			fill(255);
+			textAlign(CENTER, CENTER);
+			if (p.getLabelType().equals(HelioRoomModel.LABEL_NAME))
+				text(p.getName().toUpperCase(), l_x, height/2);
+			if (p.getLabelType().equals(HelioRoomModel.LABEL_COLOR))
+				text(p.getColorName().toUpperCase(), l_x, height/2);
 		}
 	}
 	
@@ -97,9 +113,7 @@ public class HelioRoomClient extends PApplet {
 		// Displacement (in deg) from viewAngleEnd
 		double deg_displ = hr.getViewAngleEnd() - deg;
 		if (deg_displ < -180)
-			deg_displ = 360 + deg_displ ;
-		if (p.getName().equals("Mercury")) 
-			System.out.format("P(deg) %+.2f Disp(deg) %+.2f%n", deg, deg_displ);
+			deg_displ = 360 + deg_displ;
 		return (float) (deg_displ*deg_to_px_ratio);	
 	}
 

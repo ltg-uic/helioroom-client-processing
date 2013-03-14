@@ -1,5 +1,7 @@
 package ltg.helioroom;
 
+import java.util.Date;
+
 import ltg.commons.PhenomenaEvent;
 import ltg.commons.PhenomenaEventHandler;
 import ltg.commons.PhenomenaEventListener;
@@ -51,12 +53,15 @@ public class HelioRoomClient extends PApplet {
 
 
 	public void draw() {
+		// Return if no data in model
 		if (!hr.isInitialized()) {
 			background(0);
 			return;
 		}
 		drawTiledStarsBackground();
-		drawPlanets();
+		// Draw planets
+		double dt = new Date().getTime() - hr.getStartTime()*1000;
+		drawPlanets(dt);
 	}
 
 
@@ -74,14 +79,28 @@ public class HelioRoomClient extends PApplet {
 	}
 
 
-	private void drawPlanets() {
-		int i = 0;
+	private void drawPlanets(double dt) {
+		// remember... dt is in milliseconds since the beginning of the simulation!
 		for (Planet p: hr.getPlanets()) {
-			i=i+100;
 			int pc = unhex(p.getColor().substring(2));
 			fill(pc);
-			ellipse(i, height/2, planet_diameter, planet_diameter);
+			ellipse(calculatePlanetPosition(p.getStartPosition(), p.getClassOrbitalTime(), dt, p), height/2, planet_diameter, planet_diameter);
 		}
+	}
+	
+	
+	private float calculatePlanetPosition(double deg_0, double classOrbitalTime, double dt, Planet p) {
+		// Position in degrees
+		double deg = (deg_0 + .006*dt/classOrbitalTime) % 360;
+		// Degrees to pixels ratio
+		double deg_to_px_ratio = ((double) width) / hr.getViewAngle();
+		// Displacement (in deg) from viewAngleEnd
+		double deg_displ = hr.getViewAngleEnd() - deg;
+		if (deg_displ < -180)
+			deg_displ = 360 + deg_displ ;
+		if (p.getName().equals("Mercury")) 
+			System.out.format("P(deg) %+.2f Disp(deg) %+.2f%n", deg, deg_displ);
+		return (float) (deg_displ*deg_to_px_ratio);	
 	}
 
 

@@ -1,6 +1,7 @@
 package ltg.helioroom;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ltg.commons.PhenomenaXMLUtils;
@@ -31,10 +32,10 @@ public class HelioRoomModel {
 	private List<Planet> planets = null;
 	
 	// Other data
-	public boolean initialized = false;
+	private boolean initialized = false;
 	
 	
-	public synchronized long getStartTime() {
+	public synchronized double getStartTime() {
 		return startTime;
 	}
 
@@ -42,11 +43,11 @@ public class HelioRoomModel {
 		return state;
 	}
 
-	public synchronized int getViewAngleBegin() {
+	public synchronized double getViewAngleBegin() {
 		return viewAngleBegin;
 	}
 
-	public synchronized int getViewAngleEnd() {
+	public synchronized double getViewAngleEnd() {
 		return viewAngleEnd;
 	}
 
@@ -72,6 +73,15 @@ public class HelioRoomModel {
 	public synchronized boolean isInitialized() {
 		return initialized;
 	}
+	
+	
+	public synchronized double getViewAngle() {
+		int w = viewAngleEnd - viewAngleBegin;
+		if (w > 0)
+			return w;
+		else
+			return (360 + w);
+	}
 
 
 	private String parseStateElement(Element e, String element) throws DocumentException {
@@ -89,6 +99,7 @@ public class HelioRoomModel {
 		List<Element> planetsElements = PhenomenaXMLUtils.parseListElement(e, element);
 		for (Element pl : planetsElements)
 			plans.add(new Planet(pl));
+		Collections.reverse(plans);
 		return plans;
 	}
 	

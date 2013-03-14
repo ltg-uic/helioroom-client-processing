@@ -1,4 +1,4 @@
-package ltg.helioroom;
+package ltg.helioroom.model;
 
 import ltg.commons.PhenomenaXMLUtils;
 

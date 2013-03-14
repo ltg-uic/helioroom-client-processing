@@ -1,10 +1,19 @@
 package ltg.helioroom;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.SocketException;
 import java.util.Date;
 
 import ltg.commons.PhenomenaEvent;
 import ltg.commons.PhenomenaEventHandler;
 import ltg.commons.PhenomenaEventListener;
+import ltg.helioroom.model.HelioRoomModel;
+import ltg.helioroom.model.Planet;
+
+import org.apache.commons.net.ntp.NTPUDPClient;
+import org.apache.commons.net.ntp.TimeInfo;
+
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PImage;
@@ -20,6 +29,7 @@ public class HelioRoomClient extends PApplet {
 	private PImage background = null;
 	private PFont labelsFont;
 	private int planet_diameter;
+	private long timeOffset = 0;
 
 
 	public static void main(String[] args) {
@@ -39,6 +49,7 @@ public class HelioRoomClient extends PApplet {
 		size(displayWidth/2, displayHeight/2);
 		background = loadImage("../resources/stars2.jpeg");
 		labelsFont = createFont("Helvetica",32,true);
+		updateTime();
 		// Logic
 		peh = new PhenomenaEventHandler("hr_dev_w1@54.243.60.48", "hr_dev_w1");
 		peh.registerHandler("helioroom", new PhenomenaEventListener() {
@@ -59,8 +70,9 @@ public class HelioRoomClient extends PApplet {
 		}
 		// Draw stars
 		drawTiledStarsBackground();
+		// Calculate dt (in ms)
+		double dt = new Date().getTime() + timeOffset - hr.getStartTime()*1000;
 		// Draw planets and labels
-		double dt = new Date().getTime() - hr.getStartTime()*1000;
 		drawPlanets(dt);
 	}
 
@@ -103,8 +115,8 @@ public class HelioRoomClient extends PApplet {
 				text(p.getColorName().toUpperCase(), l_x, height/2);
 		}
 	}
-	
-	
+
+
 	private float calculatePlanetPosition(double deg_0, double classOrbitalTime, double dt, Planet p) {
 		// Position in degrees
 		double deg = (deg_0 + .006*dt/classOrbitalTime) % 360;
@@ -126,6 +138,32 @@ public class HelioRoomClient extends PApplet {
 
 	private void processInitEvent(PhenomenaEvent e) {
 		hr.init(e.getXML());
+	}
+
+
+
+	///////////////////
+	// Other methods //
+	///////////////////
+
+	private void updateTime() {
+		NTPUDPClient client = new NTPUDPClient();
+		// We want to timeout if a response takes longer than 10 seconds
+		client.setDefaultTimeout(10000);
+		try {
+			client.open();
+			try {
+				InetAddress hostAddr = InetAddress.getByName("us.pool.ntp.org");
+				TimeInfo t = client.getTime(hostAddr);
+				t.computeDetails();
+				timeOffset = t.getOffset();
+			} catch (IOException ioe) {
+				return;
+			}
+		} catch (SocketException e) {
+			return;
+		}
+		client.close();
 	}
 
 

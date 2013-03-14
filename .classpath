@@ -7,6 +7,7 @@
 	<classpathentry kind="lib" path="libs/smack.jar"/>
 	<classpathentry kind="lib" path="libs/smackx.jar"/>
 	<classpathentry kind="lib" path="libs/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="libs/commons-net-3.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

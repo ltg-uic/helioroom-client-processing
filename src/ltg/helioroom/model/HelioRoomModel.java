@@ -1,4 +1,4 @@
-package ltg.helioroom;
+package ltg.helioroom.model;
 
 import java.util.ArrayList;
 import java.util.Collections;

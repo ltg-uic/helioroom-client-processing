@@ -17,6 +17,8 @@ import org.apache.commons.net.ntp.TimeInfo;
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PImage;
+import controlP5.ControlP5;
+import controlP5.RadioButton;
 
 public class HelioRoomClient extends PApplet {
 	private static final long serialVersionUID = 1L;
@@ -30,6 +32,8 @@ public class HelioRoomClient extends PApplet {
 	private PFont labelsFont;
 	private int planet_diameter;
 	private long timeOffset = 0;
+	private ControlP5 cp5;
+	private RadioButton r;
 
 
 	public static void main(String[] args) {
@@ -49,16 +53,21 @@ public class HelioRoomClient extends PApplet {
 		size(displayWidth/2, displayHeight/2);
 		background = loadImage("../resources/stars2.jpeg");
 		labelsFont = createFont("Helvetica",32,true);
+		cp5 = new ControlP5(this);
+		r = cp5.addRadioButton("radioButton")
+				.setPosition(10,10)
+				.setSize(20,20)
+				.setItemsPerRow(2)
+				.setSpacingColumn(100)
+				.addItem("hr_julia_w1",1)
+				.addItem("hr_ben_w1",5)
+				.addItem("hr_julia_w2",2)
+				.addItem("hr_ben_w2",6)
+				.addItem("hr_julia_w3",3)
+				.addItem("hr_ben_w3",7)
+				.addItem("hr_julia_w4",4)
+				.addItem("hr_ben_w4",8);				
 		updateTime();
-		// Logic
-		peh = new PhenomenaEventHandler("hr_dev_w1@54.243.60.48", "hr_dev_w1");
-		peh.registerHandler("helioroom", new PhenomenaEventListener() {
-			@Override
-			public void processEvent(PhenomenaEvent e) {
-				processInitEvent(e);
-			}
-		});
-		peh.runAsynchronously();
 	}
 
 
@@ -74,6 +83,49 @@ public class HelioRoomClient extends PApplet {
 		double dt = new Date().getTime() + timeOffset - hr.getStartTime()*1000;
 		// Draw planets and labels
 		drawPlanets(dt);
+	}
+
+
+	public void radioButton(int a) {
+		// Sketch
+		r.deactivateAll();
+		r.setVisible(false);
+		String username = null;
+		switch (a) {
+		case 1:
+			username = "hr_julia_w1";
+			break;
+		case 2:
+			username = "hr_julia_w2";
+			break;
+		case 3:
+			username = "hr_julia_w3";
+			break;
+		case 4:
+			username = "hr_julia_w4";
+			break;
+		case 5:
+			username = "hr_ben_w1";
+			break;
+		case 6:
+			username = "hr_ben_w2";
+			break;
+		case 7:
+			username = "hr_ben_w3";
+			break;
+		case 8:
+			username = "hr_ben_w4";
+			break;
+		}		
+		// Logic
+		peh = new PhenomenaEventHandler(username+"@54.243.60.48", username);
+		peh.registerHandler("helioroom", new PhenomenaEventListener() {
+			@Override
+			public void processEvent(PhenomenaEvent e) {
+				processInitEvent(e);
+			}
+		});
+		peh.runAsynchronously();
 	}
 
 

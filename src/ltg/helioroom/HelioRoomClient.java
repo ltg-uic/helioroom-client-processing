@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import ltg.commons.PhenomenaEvent;
 import ltg.commons.PhenomenaEventHandler;
@@ -34,6 +36,7 @@ public class HelioRoomClient extends PApplet {
 	private long timeOffset = 0;
 	private ControlP5 cp5;
 	private RadioButton r;
+	private Map<String, PImage> images = new HashMap<String, PImage>();
 
 
 	public static void main(String[] args) {
@@ -51,22 +54,10 @@ public class HelioRoomClient extends PApplet {
 		// Sketch
 		frameRate(30);
 		size(displayWidth/2, displayHeight/2);
-		background = loadImage("../resources/stars2.jpeg");
+		// Create fonts, load resources
 		labelsFont = createFont("Helvetica",32,true);
-		cp5 = new ControlP5(this);
-		r = cp5.addRadioButton("radioButton")
-				.setPosition(10,10)
-				.setSize(20,20)
-				.setItemsPerRow(2)
-				.setSpacingColumn(100)
-				.addItem("hr_julia_w1",1)
-				.addItem("hr_ben_w1",5)
-				.addItem("hr_julia_w2",2)
-				.addItem("hr_ben_w2",6)
-				.addItem("hr_julia_w3",3)
-				.addItem("hr_ben_w3",7)
-				.addItem("hr_julia_w4",4)
-				.addItem("hr_ben_w4",8);				
+		loadImages();
+		setupGUI();				
 		updateTime();
 	}
 
@@ -197,7 +188,48 @@ public class HelioRoomClient extends PApplet {
 	///////////////////
 	// Other methods //
 	///////////////////
+	
+	private void setupGUI() {
+		cp5 = new ControlP5(this);
+		r = cp5.addRadioButton("radioButton")
+				.setPosition(10,10)
+				.setSize(20,20)
+				.setItemsPerRow(2)
+				.setSpacingColumn(100)
+				.addItem("hr_julia_w1",1)
+				.addItem("hr_ben_w1",5)
+				.addItem("hr_julia_w2",2)
+				.addItem("hr_ben_w2",6)
+				.addItem("hr_julia_w3",3)
+				.addItem("hr_ben_w3",7)
+				.addItem("hr_julia_w4",4)
+				.addItem("hr_ben_w4",8);
+	}
+	
+	
+	private void loadImages() {
+		background = loadImage("../resources/stars2.jpeg");
+		// Spheres
+		images.put("Blue", loadImage("../resources/colors/blue.png"));
+		images.put("Brown", loadImage("../resources/colors/brown.png"));
+		images.put("Gray", loadImage("../resources/colors/gray.png"));
+		images.put("Green", loadImage("../resources/colors/green.png"));
+		images.put("Orange", loadImage("../resources/colors/orange.png"));
+		images.put("Pink", loadImage("../resources/colors/pink.png"));
+		images.put("Red", loadImage("../resources/colors/red.png"));
+		images.put("Yellow", loadImage("../resources/colors/yellow.png"));
+		// Planets
+		images.put("Earth", loadImage("../resources/planets/earth.png"));
+		images.put("Jupiter", loadImage("../resources/planets/jupiter.png"));
+		images.put("Mars", loadImage("../resources/planets/mars.png"));
+		images.put("Mercury", loadImage("../resources/planets/mercury.png"));
+		images.put("Neptune", loadImage("../resources/planets/neptune.png"));
+		images.put("Saturn", loadImage("../resources/planets/saturn.png"));
+		images.put("Uranus", loadImage("../resources/planets/uranus.png"));
+		images.put("Venus", loadImage("../resources/planets/venus.png"));
+	}
 
+	
 	private void updateTime() {
 		NTPUDPClient client = new NTPUDPClient();
 		// We want to timeout if a response takes longer than 10 seconds

@@ -103,12 +103,11 @@ public class PhenomenaEventHandler {
 	private void printRegisteredListeners() {
 		String registeredListeners = " ";
 		for (String s: listeners.keySet())
-			registeredListeners = registeredListeners + s + ", ";
+			registeredListeners = registeredListeners + "<" + s + "> ";
 		if (registeredListeners.length()>3) {
-		System.out.print("Listening for events of type [");
-		System.out.print(registeredListeners.substring(0, registeredListeners.length()-2)+" ]\n");
+		System.out.println("Listening for events of type" + registeredListeners);
 		} else {
-			System.out.print("Listening for events of type [ ]");
+			System.out.print("Listening for events of type null");
 		}
 	}
 

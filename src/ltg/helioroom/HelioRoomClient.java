@@ -77,6 +77,113 @@ public class HelioRoomClient extends PApplet {
 	}
 
 
+	/////////////////////
+	// Drawing methods //
+	/////////////////////
+
+	private void drawTiledStarsBackground() {
+		imageMode(CORNER);
+		int o_rep = width/background.width;
+		int v_rep = height/background.height;
+		for (int j=0;j<=v_rep;j++)
+			for (int i=0;i<=o_rep;i++)
+				image(background, i*background.width, j*background.height, background.width, background.height);
+	}
+
+
+	private void drawPlanets(double dt) {
+		// Remember: dt is in milliseconds since the beginning of the simulation!
+		// Calculate diameter
+		planet_diameter = (int) (.6*height);
+		// For each planet...
+		for (Planet p: hr.getPlanets())
+			drawPlanet(dt, p);
+	}
+
+
+	private void drawPlanet(double dt, Planet p) {
+		// Get planet color
+		int pc = unhex(p.getColor().substring(2));
+		fill(pc);
+		// Calculate planet x and y coordinates
+		float x = calculatePlanetPosition(p.getStartPosition(), p.getClassOrbitalTime(), dt, p);
+		float y = height/2;
+		// Choose planet representation
+		imageMode(CENTER);
+		PImage i= null;
+		if (p.getRepresentation().equals(HelioRoomModel.REP_SPHERE))
+			i = images.get(p.getColorName());  // Colored sphere image
+		else if (p.getRepresentation().equals(HelioRoomModel.REP_IMAGE))
+			i = images.get(p.getName());	// Planet image 
+		else {
+			System.out.println("ERROR: no such a representation for the planet. Choose: sphere or image");
+			return;
+		}
+		// Calculate planet size
+		float p_h = planet_diameter;
+		float p_w = p_h*(i.width/i.height);
+		// Draw planet
+		image(i, x, y, p_w, p_h);
+		// Draw label
+		if (p.getLabelType().equals(HelioRoomModel.LABEL_NONE))
+			return;
+		float l_x = calculatePlanetPosition(p.getStartPosition(), p.getClassOrbitalTime(), dt, p);
+		textFont(labelsFont);
+		fill(255);
+		textAlign(CENTER, CENTER);
+		if (p.getLabelType().equals(HelioRoomModel.LABEL_NAME))
+			text(p.getName().toUpperCase(), l_x, height/2);
+		if (p.getLabelType().equals(HelioRoomModel.LABEL_COLOR))
+			text(p.getColorName().toUpperCase(), l_x, height/2);
+	}
+
+
+	private float calculatePlanetPosition(double deg_0, double classOrbitalTime, double dt, Planet p) {
+		// Position in degrees
+		double deg = (deg_0 + .006*dt/classOrbitalTime) % 360;
+		// Degrees to pixels ratio
+		double deg_to_px_ratio = ((double) width) / hr.getViewAngle();
+		// Displacement (in deg) from viewAngleEnd
+		double deg_displ = hr.getViewAngleEnd() - deg;
+		if (deg_displ < -180)
+			deg_displ = 360 + deg_displ;
+		return (float) (deg_displ*deg_to_px_ratio);	
+	}
+
+
+
+
+	////////////////////////////
+	// Event handling methods //
+	////////////////////////////
+
+	private void processInitEvent(PhenomenaEvent e) {
+		hr.init(e.getXML());
+	}
+
+
+	///////////////////
+	// Other methods //
+	///////////////////
+
+	private void setupGUI() {
+		cp5 = new ControlP5(this);
+		r = cp5.addRadioButton("radioButton")
+				.setPosition(10,10)
+				.setSize(20,20)
+				.setItemsPerRow(2)
+				.setSpacingColumn(100)
+				.addItem("hr_julia_w1",1)
+				.addItem("hr_ben_w1",5)
+				.addItem("hr_julia_w2",2)
+				.addItem("hr_ben_w2",6)
+				.addItem("hr_julia_w3",3)
+				.addItem("hr_ben_w3",7)
+				.addItem("hr_julia_w4",4)
+				.addItem("hr_ben_w4",8);
+	}
+
+
 	public void radioButton(int a) {
 		// Sketch
 		r.deactivateAll();
@@ -121,92 +228,6 @@ public class HelioRoomClient extends PApplet {
 
 
 
-	/////////////////////
-	// Drawing methods //
-	/////////////////////
-
-	private void drawTiledStarsBackground() {
-		int o_rep = width/background.width;
-		int v_rep = height/background.height;
-		for (int j=0;j<=v_rep;j++)
-			for (int i=0;i<=o_rep;i++)
-				image(background, i*background.width, j*background.height, background.width, background.height);
-	}
-
-
-	private void drawPlanets(double dt) {
-		// Remember: dt is in milliseconds since the beginning of the simulation!
-		// Calculate diameter
-		planet_diameter = (int) (.6*height);
-		// For each planet...
-		for (Planet p: hr.getPlanets()) {
-			// Get planet color
-			int pc = unhex(p.getColor().substring(2));
-			fill(pc);
-			// Draw planet
-			ellipse(calculatePlanetPosition(p.getStartPosition(), p.getClassOrbitalTime(), dt, p), height/2, planet_diameter, planet_diameter);
-			// Draw label
-			if (p.getLabelType().equals(HelioRoomModel.LABEL_NONE))
-				continue;
-			float l_x = calculatePlanetPosition(p.getStartPosition(), p.getClassOrbitalTime(), dt, p);
-			textFont(labelsFont);
-			fill(255);
-			textAlign(CENTER, CENTER);
-			if (p.getLabelType().equals(HelioRoomModel.LABEL_NAME))
-				text(p.getName().toUpperCase(), l_x, height/2);
-			if (p.getLabelType().equals(HelioRoomModel.LABEL_COLOR))
-				text(p.getColorName().toUpperCase(), l_x, height/2);
-		}
-	}
-
-
-	private float calculatePlanetPosition(double deg_0, double classOrbitalTime, double dt, Planet p) {
-		// Position in degrees
-		double deg = (deg_0 + .006*dt/classOrbitalTime) % 360;
-		// Degrees to pixels ratio
-		double deg_to_px_ratio = ((double) width) / hr.getViewAngle();
-		// Displacement (in deg) from viewAngleEnd
-		double deg_displ = hr.getViewAngleEnd() - deg;
-		if (deg_displ < -180)
-			deg_displ = 360 + deg_displ;
-		return (float) (deg_displ*deg_to_px_ratio);	
-	}
-
-
-
-
-	////////////////////////////
-	// Event handling methods //
-	////////////////////////////
-
-	private void processInitEvent(PhenomenaEvent e) {
-		hr.init(e.getXML());
-	}
-
-
-
-	///////////////////
-	// Other methods //
-	///////////////////
-	
-	private void setupGUI() {
-		cp5 = new ControlP5(this);
-		r = cp5.addRadioButton("radioButton")
-				.setPosition(10,10)
-				.setSize(20,20)
-				.setItemsPerRow(2)
-				.setSpacingColumn(100)
-				.addItem("hr_julia_w1",1)
-				.addItem("hr_ben_w1",5)
-				.addItem("hr_julia_w2",2)
-				.addItem("hr_ben_w2",6)
-				.addItem("hr_julia_w3",3)
-				.addItem("hr_ben_w3",7)
-				.addItem("hr_julia_w4",4)
-				.addItem("hr_ben_w4",8);
-	}
-	
-	
 	private void loadImages() {
 		background = loadImage("../resources/stars2.jpeg");
 		// Spheres
@@ -229,7 +250,7 @@ public class HelioRoomClient extends PApplet {
 		images.put("Venus", loadImage("../resources/planets/venus.png"));
 	}
 
-	
+
 	private void updateTime() {
 		NTPUDPClient client = new NTPUDPClient();
 		// We want to timeout if a response takes longer than 10 seconds

@@ -65,6 +65,7 @@ public class HelioRoomModel {
 			planets = parsePlanets(e, "planets");
 		} catch (DocumentException ex) {
 			System.err.println("Errors initializing HelioRoom model");
+			System.exit(-1);
 		}
 		initialized = true;
 	}

@@ -52,7 +52,7 @@ public class HelioRoomClient extends PApplet {
 
 	public void setup() {
 		// Sketch
-		frameRate(30);
+		frameRate(40);
 		size(displayWidth/2, displayHeight/2);
 		// Create fonts, load resources
 		labelsFont = createFont("Helvetica",32,true);
@@ -129,7 +129,7 @@ public class HelioRoomClient extends PApplet {
 			return;
 		float l_x = calculatePlanetPosition(p.getStartPosition(), p.getClassOrbitalTime(), dt, p);
 		textFont(labelsFont);
-		fill(255);
+		fill(0);
 		textAlign(CENTER, CENTER);
 		if (p.getLabelType().equals(HelioRoomModel.LABEL_NAME))
 			text(p.getName().toUpperCase(), l_x, height/2);

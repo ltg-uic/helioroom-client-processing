@@ -42,7 +42,7 @@ private Map<String, PImage> images = new HashMap<String, PImage>();
 public void setup() {
   // Sketch
   frameRate(40);
-  size(displayWidth/2, displayHeight/2);
+  size(displayWidth, displayHeight);
   // Create fonts, load resources
   labelsFont = createFont("Helvetica", 32, true);
   loadImages();

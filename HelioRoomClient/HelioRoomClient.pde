@@ -219,25 +219,25 @@ public void radioButton(int a) {
 
 
 private void loadImages() {
-  background = loadImage("../resources/stars2.jpeg");
+  background = loadImage("resources/stars2.jpeg");
   // Spheres
-  images.put("Blue", loadImage("../resources/colors/blue.png"));
-  images.put("Brown", loadImage("../resources/colors/brown.png"));
-  images.put("Gray", loadImage("../resources/colors/gray.png"));
-  images.put("Green", loadImage("../resources/colors/green.png"));
-  images.put("Orange", loadImage("../resources/colors/orange.png"));
-  images.put("Pink", loadImage("../resources/colors/pink.png"));
-  images.put("Red", loadImage("../resources/colors/red.png"));
-  images.put("Yellow", loadImage("../resources/colors/yellow.png"));
+  images.put("Blue", loadImage("resources/colors/blue.png"));
+  images.put("Brown", loadImage("resources/colors/brown.png"));
+  images.put("Gray", loadImage("resources/colors/gray.png"));
+  images.put("Green", loadImage("resources/colors/green.png"));
+  images.put("Orange", loadImage("resources/colors/orange.png"));
+  images.put("Pink", loadImage("resources/colors/pink.png"));
+  images.put("Red", loadImage("resources/colors/red.png"));
+  images.put("Yellow", loadImage("resources/colors/yellow.png"));
   // Planets
-  images.put("Earth", loadImage("../resources/planets/earth.png"));
-  images.put("Jupiter", loadImage("../resources/planets/jupiter.png"));
-  images.put("Mars", loadImage("../resources/planets/mars.png"));
-  images.put("Mercury", loadImage("../resources/planets/mercury.png"));
-  images.put("Neptune", loadImage("../resources/planets/neptune.png"));
-  images.put("Saturn", loadImage("../resources/planets/saturn.png"));
-  images.put("Uranus", loadImage("../resources/planets/uranus.png"));
-  images.put("Venus", loadImage("../resources/planets/venus.png"));
+  images.put("Earth", loadImage("resources/planets/earth.png"));
+  images.put("Jupiter", loadImage("resources/planets/jupiter.png"));
+  images.put("Mars", loadImage("resources/planets/mars.png"));
+  images.put("Mercury", loadImage("resources/planets/mercury.png"));
+  images.put("Neptune", loadImage("resources/planets/neptune.png"));
+  images.put("Saturn", loadImage("resources/planets/saturn.png"));
+  images.put("Uranus", loadImage("resources/planets/uranus.png"));
+  images.put("Venus", loadImage("resources/planets/venus.png"));
 }
 
 

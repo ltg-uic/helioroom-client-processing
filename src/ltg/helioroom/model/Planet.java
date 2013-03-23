@@ -1,6 +1,7 @@
 package ltg.helioroom.model;
 
-import ltg.commons.PhenomenaXMLUtils;
+
+import ltg.commons.phenomena_handler.PhenomenaXMLUtils;
 
 import org.dom4j.DocumentException;
 import org.dom4j.Element;

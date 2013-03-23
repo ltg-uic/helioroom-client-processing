@@ -5,9 +5,10 @@
 	<classpathentry kind="lib" path="libs/commons-net-3.2.jar"/>
 	<classpathentry kind="lib" path="libs/controlP5.jar"/>
 	<classpathentry kind="lib" path="libs/core.jar"/>
-	<classpathentry kind="lib" path="libs/dom4j-1.6.1.jar"/>
 	<classpathentry kind="lib" path="libs/simple-java-xmpp-client-1.4.jar"/>
 	<classpathentry kind="lib" path="libs/smack.jar"/>
 	<classpathentry kind="lib" path="libs/smackx.jar"/>
+	<classpathentry kind="lib" path="libs/ltg-java-event-handler-1.2.jar"/>
+	<classpathentry kind="lib" path="libs/dom4j-1.6.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import ltg.commons.PhenomenaXMLUtils;
+import ltg.commons.phenomena_handler.PhenomenaXMLUtils;
 
 import org.dom4j.DocumentException;
 import org.dom4j.Element;

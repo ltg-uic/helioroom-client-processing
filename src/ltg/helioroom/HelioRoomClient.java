@@ -7,9 +7,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import ltg.commons.PhenomenaEvent;
-import ltg.commons.PhenomenaEventHandler;
-import ltg.commons.PhenomenaEventListener;
+
+import ltg.commons.phenomena_handler.PhenomenaEvent;
+import ltg.commons.phenomena_handler.PhenomenaEventHandler;
+import ltg.commons.phenomena_handler.PhenomenaEventListener;
 import ltg.helioroom.model.HelioRoomModel;
 import ltg.helioroom.model.Planet;
 

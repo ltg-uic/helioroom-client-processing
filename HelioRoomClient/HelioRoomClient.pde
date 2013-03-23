@@ -173,7 +173,7 @@ private void setupGUI() {
 }
 
 
-public void radioButton(int a) {
+void radioButton(int a) {
   // Sketch
   r.deactivateAll();
   r.setVisible(false);
@@ -214,6 +214,13 @@ public void radioButton(int a) {
   }
   );
   peh.runAsynchronously();
+}
+
+
+void keyPressed() {
+  if (key == ESC) {
+    key = 0;  
+  }
 }
 
 

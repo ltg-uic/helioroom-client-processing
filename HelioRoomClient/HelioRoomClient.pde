@@ -30,6 +30,7 @@ private int planet_diameter;
 private long timeOffset = 0;
 private ControlP5 cp5;
 private RadioButton r;
+private Textlabel l;
 private Map<String, PImage> images = new HashMap<String, PImage>();
 
 
@@ -110,6 +111,10 @@ private void drawPlanet(double dt, Planet p) {
   }
   // Calculate planet size
   float p_h = planet_diameter;
+  if (i==null) {
+    //System.err.println("ERROR: impossible to load planet representation image");
+    return;
+  }
   float p_w = p_h*(i.width/i.height);
   // Draw planet
   image(i, x, y, p_w, p_h);
@@ -165,6 +170,12 @@ private void setupGUI() {
                 .addItem("B", 2)
                     .addItem("C", 3)
                         .addItem("D", 4);
+  if (background==null)
+    l = cp5.addTextlabel("asssets_warn")
+           .setText("Looking for " + sketchPath("") + "resources folder and can't seem to find it. \nPlease make sure the 'resources' folder that came with this application is in said location.")
+           .setPosition(50, 300)
+           .setColorValue(0xffff0000)
+           .setFont(createFont("BitFontStandard58", 20));
 }
 
 
@@ -200,11 +211,11 @@ void radioButton(int a) {
 }
 
 
-void keyPressed() {
-  if (key == ESC) {
-    key = 0;  
-  }
-}
+//void keyPressed() {
+//  if (key == ESC) {
+//    key = 0;  
+//  }
+//}
 
 
 

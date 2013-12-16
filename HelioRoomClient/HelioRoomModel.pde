@@ -11,7 +11,7 @@ public class HelioRoomModel {
 
   // Planets representation constants
   public final static String REP_IMAGE     = "image";
-  public final static String REP_SPHERE     = "spheres";
+  public final static String REP_SPHERE     = "sphere";
 
   // Planets names constants
   public final static String LABEL_NONE     = "none";

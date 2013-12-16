@@ -32,7 +32,6 @@ public class Planet {
     startPosition = PhenomenaXMLUtils.parseDoubleElement(planet, "startPosition");
     representation = parseRepresentation(planet, "representation");
     labelType = parseLabelType(planet, "labelType");
-    
   }
   
   private String parseRepresentation(Element planet, String element) throws DocumentException {

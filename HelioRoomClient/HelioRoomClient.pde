@@ -105,7 +105,7 @@ private void drawPlanet(double dt, Planet p) {
   else if (p.getRepresentation().equals(HelioRoomModel.REP_IMAGE))
     i = images.get(p.getName());  // Planet image 
   else {
-    System.out.println("ERROR: no such a representation for the planet. Choose: sphere or image");
+    System.err.println("ERROR: no such a representation for the planet. Choose: sphere or image");
     return;
   }
   // Calculate planet size
@@ -158,18 +158,13 @@ private void processInitEvent(PhenomenaEvent e) {
 private void setupGUI() {
   cp5 = new ControlP5(this);
   r = cp5.addRadioButton("radioButton")
-    .setPosition(10, 10)
-      .setSize(20, 20)
-        .setItemsPerRow(2)
-          .setSpacingColumn(100)
-            .addItem("hr_julia_w1", 1)
-              .addItem("hr_ben_w1", 5)
-                .addItem("hr_julia_w2", 2)
-                  .addItem("hr_ben_w2", 6)
-                    .addItem("hr_julia_w3", 3)
-                      .addItem("hr_ben_w3", 7)
-                        .addItem("hr_julia_w4", 4)
-                          .addItem("hr_ben_w4", 8);
+    .setPosition(50, 20)
+      .setSize(50, 50)
+        .setItemsPerRow(1)
+            .addItem("A", 1)
+                .addItem("B", 2)
+                    .addItem("C", 3)
+                        .addItem("D", 4);
 }
 
 
@@ -180,32 +175,20 @@ void radioButton(int a) {
   String username = null;
   switch (a) {
   case 1:
-    username = "hr_julia_w1";
+    username = "hr-w1";
     break;
   case 2:
-    username = "hr_julia_w2";
+    username = "hr-w2";
     break;
   case 3:
-    username = "hr_julia_w3";
+    username = "hr-w3";
     break;
   case 4:
-    username = "hr_julia_w4";
-    break;
-  case 5:
-    username = "hr_ben_w1";
-    break;
-  case 6:
-    username = "hr_ben_w2";
-    break;
-  case 7:
-    username = "hr_ben_w3";
-    break;
-  case 8:
-    username = "hr_ben_w4";
+    username = "hr-w4";
     break;
   }    
   // Logic
-  peh = new PhenomenaEventHandler(username+"@54.243.60.48", username);
+  peh = new PhenomenaEventHandler(username+"@ltg.evl.uic.edu", username);
   peh.registerHandler("helioroom", new PhenomenaEventListener() {
     @Override
       public void processEvent(PhenomenaEvent e) {

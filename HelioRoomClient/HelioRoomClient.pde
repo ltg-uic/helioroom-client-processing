@@ -4,6 +4,7 @@ import java.net.SocketException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.text.DecimalFormat;
 
 
 import ltg.commons.phenomena_handler.PhenomenaEvent;
@@ -32,6 +33,12 @@ private ControlP5 cp5;
 private RadioButton r;
 private Textlabel l;
 private Map<String, PImage> images = new HashMap<String, PImage>();
+// FPS indicator
+private long prev_ts;
+private int fps_size;
+private double fps_total = 0d;
+private int fps_index = 0;
+private double fps_samples[];
 
 
 
@@ -42,13 +49,16 @@ private Map<String, PImage> images = new HashMap<String, PImage>();
 
 public void setup() {
   // Sketch
-  frameRate(40);
   size(displayWidth, displayHeight);
   // Create fonts, load resources
   labelsFont = createFont("Helvetica", 32, true);
   loadImages();
   setupGUI();        
   updateTime();
+  // Initialize FPS counters
+  fps_size = 30;
+  fps_samples = new double[fps_size];
+  for (int i = 0; i < fps_size; i++) fps_samples[i] = 0d;
 }
 
 
@@ -61,9 +71,13 @@ public void draw() {
   // Draw stars
   drawTiledStarsBackground();
   // Calculate dt (in ms)
-  double dt = new Date().getTime() + timeOffset - hr.getStartTime()*1000;
+  long cur_ts = new Date().getTime();
+  double dt = cur_ts + timeOffset - hr.getStartTime()*1000;
   // Draw planets and labels
-  drawPlanets(dt);
+  //drawPlanets(dt);
+  // DEBUG: print framerate
+  printFramerate(prev_ts, cur_ts);
+  prev_ts = cur_ts;
 }
 
 
@@ -145,7 +159,16 @@ private float calculatePlanetPosition(double deg_0, double classOrbitalTime, dou
 }
 
 
-
+private void printFramerate(double prev_ts, double cur_ts) {
+  fps_total -= fps_samples[fps_index];
+  fps_samples[fps_index] = 1000/(cur_ts - prev_ts);
+  fps_total += 1000/(cur_ts - prev_ts);
+  if (++fps_index == fps_size) fps_index = 0; 
+  DecimalFormat formatter = new DecimalFormat("#0");     
+  textSize(32);
+  fill(255, 0, 0);
+  text(formatter.format(fps_total/ (double)fps_size) + " fps", width - 200, 50);
+}
 
 ////////////////////////////
 // Event handling methods //
@@ -172,7 +195,8 @@ private void setupGUI() {
                         .addItem("D", 4);
   if (background==null)
     l = cp5.addTextlabel("asssets_warn")
-           .setText("Looking for " + sketchPath("") + "resources folder and can't seem to find it. \nPlease make sure the 'resources' folder that came with this application is in said location.")
+           .setText("Looking for " + sketchPath("") + "resources folder and can't seem to find it. \n" + 
+             "Please make sure the 'resources' folder that came with this application is in said location.")
            .setPosition(50, 300)
            .setColorValue(0xffff0000)
            .setFont(createFont("BitFontStandard58", 20));
@@ -253,6 +277,10 @@ private void updateTime() {
       TimeInfo t = client.getTime(hostAddr);
       t.computeDetails();
       timeOffset = t.getOffset();
+      if (timeOffset > 0) 
+        println("The clock on this computer runs " + timeOffset + " ms late.");
+      else
+        println("The clock on this computer is " + -timeOffset + " ms ahead.");
     } 
     catch (IOException ioe) {
       return;

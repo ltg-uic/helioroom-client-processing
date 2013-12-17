@@ -27,7 +27,8 @@ private HelioRoomModel hr = new HelioRoomModel();
 // Sketch
 private PImage background = null;
 private PFont labelsFont;
-private int planet_diameter;
+private float planet_diameter;
+private double deg_to_px_ratio;
 private long timeOffset = 0;
 private ControlP5 cp5;
 private RadioButton r;
@@ -53,6 +54,7 @@ public void setup() {
   // Create fonts, load resources
   labelsFont = createFont("Helvetica", 32, true);
   loadImages();
+  // More setup
   setupGUI();        
   updateTime();
   // Initialize FPS counters
@@ -74,9 +76,9 @@ public void draw() {
   long cur_ts = new Date().getTime();
   double dt = cur_ts + timeOffset - hr.getStartTime()*1000;
   // Draw planets and labels
-  //drawPlanets(dt);
+  drawPlanets(dt);
   // DEBUG: print framerate
-  printFramerate(prev_ts, cur_ts);
+  //printFramerate(prev_ts, cur_ts);
   prev_ts = cur_ts;
 }
 
@@ -96,9 +98,11 @@ private void drawTiledStarsBackground() {
 
 
 private void drawPlanets(double dt) {
-  // Remember: dt is in milliseconds since the beginning of the simulation!
+  // Remember: dt is in milliseconds since the beginning of the simulation, not the launch of the app
   // Calculate diameter
-  planet_diameter = (int) (.6*height);
+  planet_diameter = .6f*height;
+  // Calculate degree to pixels ratio based on the current view angle
+  deg_to_px_ratio = ((double) width) / hr.getViewAngle();
   // For each planet...
   for (Planet p: hr.getPlanets())
     drawPlanet(dt, p);
@@ -112,6 +116,9 @@ private void drawPlanet(double dt, Planet p) {
   // Calculate planet x and y coordinates
   float x = calculatePlanetPosition(p.getStartPosition(), p.getClassOrbitalTime(), dt, p);
   float y = height/2;
+  // If planet is outside of screen we don't need to draw it
+  if (x < -planet_diameter/2 - 10 || x > width + planet_diameter/2 + 10)
+    return;
   // Choose planet representation
   imageMode(CENTER);
   PImage i= null;
@@ -125,17 +132,15 @@ private void drawPlanet(double dt, Planet p) {
   }
   // Calculate planet size
   float p_h = planet_diameter;
-  if (i==null) {
-    //System.err.println("ERROR: impossible to load planet representation image");
+  if (i==null)
     return;
-  }
   float p_w = p_h*(i.width/i.height);
   // Draw planet
   image(i, x, y, p_w, p_h);
   // Draw label
   if (p.getLabelType().equals(HelioRoomModel.LABEL_NONE))
     return;
-  float l_x = calculatePlanetPosition(p.getStartPosition(), p.getClassOrbitalTime(), dt, p);
+  float l_x = x;
   textFont(labelsFont);
   fill(0);
   textAlign(CENTER, CENTER);
@@ -148,14 +153,12 @@ private void drawPlanet(double dt, Planet p) {
 
 private float calculatePlanetPosition(double deg_0, double classOrbitalTime, double dt, Planet p) {
   // Position in degrees
-  double deg = (deg_0 + .006*dt/classOrbitalTime) % 360;
-  // Degrees to pixels ratio
-  double deg_to_px_ratio = ((double) width) / hr.getViewAngle();
-  // Displacement (in deg) from viewAngleEnd
+  double deg = (deg_0 + .006d * dt / classOrbitalTime) % 360;
+  // Displacement (in deg) from viewAngleEnd (left side of the screen)
   double deg_displ = hr.getViewAngleEnd() - deg;
   if (deg_displ < -180)
     deg_displ = 360 + deg_displ;
-  return (float) (deg_displ*deg_to_px_ratio);
+  return (float) (deg_displ * deg_to_px_ratio);
 }
 
 

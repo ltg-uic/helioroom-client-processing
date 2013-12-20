@@ -52,7 +52,7 @@ public void setup() {
   // Sketch
   size(displayWidth, displayHeight);
   // Create fonts, load resources
-  labelsFont = createFont("Helvetica", 32, true);
+  labelsFont = createFont("Helvetica", 96, true);
   loadImages();
   // More setup
   setupGUI();        

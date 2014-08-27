@@ -46,23 +46,28 @@ public class HelioRoomModel {
   }
 
 
-//  public synchronized void init(Element e) {
-//    try {
-//      startTime = PhenomenaXMLUtils.parseIntElement(e, "startTime");
-//      state = parseStateElement(e, "state");
-//      viewAngleBegin = PhenomenaXMLUtils.parseIntElement(e, "viewAngleBegin");
-//      viewAngleEnd = PhenomenaXMLUtils.parseIntElement(e, "viewAngleEnd");
-//      planets = parsePlanets(e, "planets");
-//    } catch (DocumentException ex) {
-//      System.err.println("Errors initializing HelioRoom model");
-//      System.exit(-1);
-//    }
-//    initialized = true;
-//  }
+  public synchronized void init(JSONObject json) {
+    startTime = json.getInt("startTime");
+    state = parseState(json.getString("state"));
+    planets = parsePlanets(json.getJSONArray("planets"));
+  }
+  
+  
+  public synchronized void setViewAngleBegin(int angle) {
+    viewAngleBegin = angle;
+  }
+
+  public synchronized void setViewAngleEnd(int angle) {
+    viewAngleEnd = angle;
+  }
   
   
   public synchronized boolean isInitialized() {
     return initialized;
+  }
+  
+  public synchronized void setInitialized(boolean flag) {
+    initialized = flag;
   }
   
   
@@ -75,24 +80,22 @@ public class HelioRoomModel {
   }
 
 
-//  private String parseStateElement(Element e, String element) throws DocumentException {
-//    String state = PhenomenaXMLUtils.parseStringElement(e, element);
-//    if (state.equals(STATE_RUNNING))
-//      return STATE_RUNNING;
-//    if (state.equals(STATE_PAUSED))
-//      return STATE_PAUSED;
-//    throw new DocumentException();
-//  }
-//
-//
-//  private List<Planet> parsePlanets(Element e, String element) throws DocumentException {
-//    List<Planet> plans = new ArrayList<Planet>();
-//    List<Element> planetsElements = PhenomenaXMLUtils.parseListElement(e, element);
-//    for (Element pl : planetsElements)
-//      plans.add(new Planet(pl));
-//    Collections.reverse(plans);
-//    return plans;
-//  }
+  private String parseState(String state) {
+    if (state.equals(STATE_RUNNING))
+      return STATE_RUNNING;
+    if (state.equals(STATE_PAUSED))
+      return STATE_PAUSED;
+    throw new RuntimeException("Problems parsing the state");
+  }
+
+  private List<Planet> parsePlanets(JSONArray planets) {
+    List<Planet> plans = new ArrayList<Planet>();
+    for (int i=0; i < planets.size(); i++) {
+      plans.add(new Planet(planets.getJSONObject(i)));
+    }
+    Collections.reverse(plans);
+    return plans;
+  }
   
 
 }

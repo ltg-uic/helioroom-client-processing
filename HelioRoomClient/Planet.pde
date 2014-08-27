@@ -18,35 +18,33 @@ public class Planet {
     this.labelType = labelType;
   }
   
-//  public Planet (Element planet) throws DocumentException{
-//    name = PhenomenaXMLUtils.parseStringElement(planet, "name");
-//    colorValue = PhenomenaXMLUtils.parseStringElement(planet, "color");
-//    colorName = PhenomenaXMLUtils.parseStringElement(planet, "colorName");
-//    classOrbitalTime = PhenomenaXMLUtils.parseDoubleElement(planet, "classOrbitalTime");
-//    startPosition = PhenomenaXMLUtils.parseDoubleElement(planet, "startPosition");
-//    representation = parseRepresentation(planet, "representation");
-//    labelType = parseLabelType(planet, "labelType");
-//  }
+  public Planet (JSONObject planet) {
+    name = planet.getString("name");
+    colorValue = planet.getString("color");
+    colorName = planet.getString("colorName");
+    classOrbitalTime = planet.getInt("classOrbitalTime");
+    startPosition = planet.getInt("startPosition");
+    representation = parseRepresentation(planet.getString("representation"));
+    labelType = parseLabelType(planet.getString("labelType"));
+  }
   
-//  private String parseRepresentation(Element planet, String element) throws DocumentException {
-//    String rep = PhenomenaXMLUtils.parseStringElement(planet, element);
-//    if (rep.equals(HelioRoomModel.REP_IMAGE))
-//      return HelioRoomModel.REP_IMAGE;
-//    if (rep.equals(HelioRoomModel.REP_SPHERE))
-//      return HelioRoomModel.REP_SPHERE;
-//    throw new DocumentException();
-//  }
+  private String parseRepresentation(String rep) {
+    if (rep.equals(HelioRoomModel.REP_IMAGE))
+      return HelioRoomModel.REP_IMAGE;
+    if (rep.equals(HelioRoomModel.REP_SPHERE))
+      return HelioRoomModel.REP_SPHERE;
+    throw new RuntimeException("Problems parsing planet representation");
+  }
   
-//  private String parseLabelType(Element planet, String element) throws DocumentException {
-//    String label = PhenomenaXMLUtils.parseStringElement(planet, element);
-//    if (label.equals(HelioRoomModel.LABEL_NONE))
-//      return HelioRoomModel.LABEL_NONE;
-//    if (label.equals(HelioRoomModel.LABEL_COLOR))
-//      return HelioRoomModel.LABEL_COLOR;
-//    if (label.equals(HelioRoomModel.LABEL_NAME))
-//      return HelioRoomModel.LABEL_NAME;
-//    throw new DocumentException();
-//  }
+  private String parseLabelType(String label) {
+    if (label.equals(HelioRoomModel.LABEL_NONE))
+      return HelioRoomModel.LABEL_NONE;
+    if (label.equals(HelioRoomModel.LABEL_COLOR))
+      return HelioRoomModel.LABEL_COLOR;
+    if (label.equals(HelioRoomModel.LABEL_NAME))
+      return HelioRoomModel.LABEL_NAME;
+    throw new RuntimeException("Problems parsing planet label types");
+  }
 
   public String getName() {
     return name;

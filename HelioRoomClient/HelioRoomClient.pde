@@ -8,26 +8,26 @@ import java.net.InetAddress;
 import java.net.SocketException;
 
 // Model
-private HelioRoomModel hr = null;
-private JSONObject config;
+HelioRoomModel hr = null;
+JSONObject config;
 // Sketch
-private PImage background_image = null;
-private PFont labelsFont;
-private PFont cp5Font;
-private float planet_diameter;
-private double deg_to_px_ratio;
-private long timeOffset = 0;
-private ControlP5 cp5;
-private RadioButton r;
-private Textlabel l;
-private Map<String, PImage> images = new HashMap<String, PImage>();
+PImage background_image = null;
+PFont labelsFont;
+PFont cp5Font;
+float planet_diameter;
+double deg_to_px_ratio;
+long timeOffset = 0;
+ControlP5 cp5;
+RadioButton r;
+Textlabel l;
+Map<String, PImage> images = new HashMap<String, PImage>();
 // FPS indicator
-private long prev_ts;
-private int fps_size;
-private double fps_total = 0d;
-private int fps_index = 0;
-private double fps_samples[];
-private boolean FPS = true; 
+boolean FPS = false;
+long prev_ts;
+int fps_size;
+double fps_total = 0d;
+int fps_index = 0;
+double fps_samples[];
 
 
 ////////////////////////
@@ -195,17 +195,26 @@ void radioButton(int a) {
   switch (a) {
   case 1:
     username = "hr-w1";
+    hr.setViewAngleBegin(0);
+    hr.setViewAngleEnd(10);
     break;
   case 2:
     username = "hr-w2";
+    hr.setViewAngleBegin(90);
+    hr.setViewAngleEnd(100);
     break;
   case 3:
     username = "hr-w3";
+    hr.setViewAngleBegin(180);
+    hr.setViewAngleEnd(190);
     break;
   case 4:
     username = "hr-w4";
+    hr.setViewAngleBegin(270);
+    hr.setViewAngleEnd(280);
     break;
   }    
+  hr.setInitialized(true);
 }
 
 

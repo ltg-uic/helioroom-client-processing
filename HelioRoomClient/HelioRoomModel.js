@@ -1,5 +1,5 @@
 function HelioRoomModel(json) {
-	this.initialized = false;
+	this.initialized = true;
 	this.startTime = json.startTime;
 	this.state = json.state;
 	this.planets = HelioRoomModel.parsePlanets(json.planets);

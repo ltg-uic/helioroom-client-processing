@@ -47,7 +47,8 @@ public void setup() {
   // Initialize FPS counters
   fps_size = 30;
   fps_samples = new double[fps_size];
-  for (int i = 0; i < fps_size; i++) fps_samples[i] = 0d;
+  for (int i = 0; i < fps_size; i++) 
+		fps_samples[i] = 0d;
 }
 
 public void draw() {

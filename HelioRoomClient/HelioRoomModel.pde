@@ -1,12 +1,4 @@
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import ltg.commons.phenomena_handler.PhenomenaXMLUtils;
-
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
 public class HelioRoomModel {
 
   // Planets representation constants
@@ -54,19 +46,19 @@ public class HelioRoomModel {
   }
 
 
-  public synchronized void init(Element e) {
-    try {
-      startTime = PhenomenaXMLUtils.parseIntElement(e, "startTime");
-      state = parseStateElement(e, "state");
-      viewAngleBegin = PhenomenaXMLUtils.parseIntElement(e, "viewAngleBegin");
-      viewAngleEnd = PhenomenaXMLUtils.parseIntElement(e, "viewAngleEnd");
-      planets = parsePlanets(e, "planets");
-    } catch (DocumentException ex) {
-      System.err.println("Errors initializing HelioRoom model");
-      System.exit(-1);
-    }
-    initialized = true;
-  }
+//  public synchronized void init(Element e) {
+//    try {
+//      startTime = PhenomenaXMLUtils.parseIntElement(e, "startTime");
+//      state = parseStateElement(e, "state");
+//      viewAngleBegin = PhenomenaXMLUtils.parseIntElement(e, "viewAngleBegin");
+//      viewAngleEnd = PhenomenaXMLUtils.parseIntElement(e, "viewAngleEnd");
+//      planets = parsePlanets(e, "planets");
+//    } catch (DocumentException ex) {
+//      System.err.println("Errors initializing HelioRoom model");
+//      System.exit(-1);
+//    }
+//    initialized = true;
+//  }
   
   
   public synchronized boolean isInitialized() {
@@ -83,24 +75,24 @@ public class HelioRoomModel {
   }
 
 
-  private String parseStateElement(Element e, String element) throws DocumentException {
-    String state = PhenomenaXMLUtils.parseStringElement(e, element);
-    if (state.equals(STATE_RUNNING))
-      return STATE_RUNNING;
-    if (state.equals(STATE_PAUSED))
-      return STATE_PAUSED;
-    throw new DocumentException();
-  }
-
-
-  private List<Planet> parsePlanets(Element e, String element) throws DocumentException {
-    List<Planet> plans = new ArrayList<Planet>();
-    List<Element> planetsElements = PhenomenaXMLUtils.parseListElement(e, element);
-    for (Element pl : planetsElements)
-      plans.add(new Planet(pl));
-    Collections.reverse(plans);
-    return plans;
-  }
+//  private String parseStateElement(Element e, String element) throws DocumentException {
+//    String state = PhenomenaXMLUtils.parseStringElement(e, element);
+//    if (state.equals(STATE_RUNNING))
+//      return STATE_RUNNING;
+//    if (state.equals(STATE_PAUSED))
+//      return STATE_PAUSED;
+//    throw new DocumentException();
+//  }
+//
+//
+//  private List<Planet> parsePlanets(Element e, String element) throws DocumentException {
+//    List<Planet> plans = new ArrayList<Planet>();
+//    List<Element> planetsElements = PhenomenaXMLUtils.parseListElement(e, element);
+//    for (Element pl : planetsElements)
+//      plans.add(new Planet(pl));
+//    Collections.reverse(plans);
+//    return plans;
+//  }
   
 
 }

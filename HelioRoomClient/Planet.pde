@@ -1,9 +1,3 @@
-
-import ltg.commons.phenomena_handler.PhenomenaXMLUtils;
-
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-
 public class Planet {  
   private String name = null;
   private String colorValue = null;
@@ -24,35 +18,35 @@ public class Planet {
     this.labelType = labelType;
   }
   
-  public Planet (Element planet) throws DocumentException{
-    name = PhenomenaXMLUtils.parseStringElement(planet, "name");
-    colorValue = PhenomenaXMLUtils.parseStringElement(planet, "color");
-    colorName = PhenomenaXMLUtils.parseStringElement(planet, "colorName");
-    classOrbitalTime = PhenomenaXMLUtils.parseDoubleElement(planet, "classOrbitalTime");
-    startPosition = PhenomenaXMLUtils.parseDoubleElement(planet, "startPosition");
-    representation = parseRepresentation(planet, "representation");
-    labelType = parseLabelType(planet, "labelType");
-  }
+//  public Planet (Element planet) throws DocumentException{
+//    name = PhenomenaXMLUtils.parseStringElement(planet, "name");
+//    colorValue = PhenomenaXMLUtils.parseStringElement(planet, "color");
+//    colorName = PhenomenaXMLUtils.parseStringElement(planet, "colorName");
+//    classOrbitalTime = PhenomenaXMLUtils.parseDoubleElement(planet, "classOrbitalTime");
+//    startPosition = PhenomenaXMLUtils.parseDoubleElement(planet, "startPosition");
+//    representation = parseRepresentation(planet, "representation");
+//    labelType = parseLabelType(planet, "labelType");
+//  }
   
-  private String parseRepresentation(Element planet, String element) throws DocumentException {
-    String rep = PhenomenaXMLUtils.parseStringElement(planet, element);
-    if (rep.equals(HelioRoomModel.REP_IMAGE))
-      return HelioRoomModel.REP_IMAGE;
-    if (rep.equals(HelioRoomModel.REP_SPHERE))
-      return HelioRoomModel.REP_SPHERE;
-    throw new DocumentException();
-  }
+//  private String parseRepresentation(Element planet, String element) throws DocumentException {
+//    String rep = PhenomenaXMLUtils.parseStringElement(planet, element);
+//    if (rep.equals(HelioRoomModel.REP_IMAGE))
+//      return HelioRoomModel.REP_IMAGE;
+//    if (rep.equals(HelioRoomModel.REP_SPHERE))
+//      return HelioRoomModel.REP_SPHERE;
+//    throw new DocumentException();
+//  }
   
-  private String parseLabelType(Element planet, String element) throws DocumentException {
-    String label = PhenomenaXMLUtils.parseStringElement(planet, element);
-    if (label.equals(HelioRoomModel.LABEL_NONE))
-      return HelioRoomModel.LABEL_NONE;
-    if (label.equals(HelioRoomModel.LABEL_COLOR))
-      return HelioRoomModel.LABEL_COLOR;
-    if (label.equals(HelioRoomModel.LABEL_NAME))
-      return HelioRoomModel.LABEL_NAME;
-    throw new DocumentException();
-  }
+//  private String parseLabelType(Element planet, String element) throws DocumentException {
+//    String label = PhenomenaXMLUtils.parseStringElement(planet, element);
+//    if (label.equals(HelioRoomModel.LABEL_NONE))
+//      return HelioRoomModel.LABEL_NONE;
+//    if (label.equals(HelioRoomModel.LABEL_COLOR))
+//      return HelioRoomModel.LABEL_COLOR;
+//    if (label.equals(HelioRoomModel.LABEL_NAME))
+//      return HelioRoomModel.LABEL_NAME;
+//    throw new DocumentException();
+//  }
 
   public String getName() {
     return name;

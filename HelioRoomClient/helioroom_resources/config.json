@@ -1,0 +1,88 @@
+{
+    "state": "running",
+    "startTime": 1387195200,
+		"multiplier": 1,
+    "planets": [
+        {
+            "name": "Mercury",
+            "color": "0xFF8B4513",
+            "colorName": "Brown",
+            "classOrbitalTime": 1,
+            "startPosition": 1,
+            "representation": "sphere",
+            "labelType": "color"
+        },
+        {
+            "name": "Venus",
+            "color": "0xFFFFB6C1",
+            "colorName": "Pink",
+            "classOrbitalTime": 3,
+            "startPosition": 41,
+            "representation": "sphere",
+            "labelType": "color"
+        },
+        {
+            "name": "Earth",
+            "color": "0xFFCC0000",
+            "colorName": "Red",
+            "classOrbitalTime": 4,
+            "startPosition": 81,
+            "representation": "sphere",
+            "labelType": "color"
+        },
+        {
+            "name": "Mars",
+            "color": "0xFF3D3D3D",
+            "colorName": "Gray",
+            "classOrbitalTime": 8,
+            "startPosition": 121,
+            "representation": "sphere",
+            "labelType": "color"
+        },
+        {
+            "name": "Jupiter",
+            "color": "0xFF00EE00",
+            "colorName": "Green",
+            "classOrbitalTime": 49,
+            "startPosition": 161,
+            "representation": "sphere",
+            "labelType": "color"
+        },
+        {
+            "name": "Saturn",
+            "color": "0xFFFFFF00",
+            "colorName": "Yellow",
+            "classOrbitalTime": 122,
+            "startPosition": 201,
+            "representation": "sphere",
+            "labelType": "color"
+        },
+        {
+            "name": "Uranus",
+            "color": "0xFFFF6600",
+            "colorName": "Orange",
+            "classOrbitalTime": 349,
+            "startPosition": 241,
+            "representation": "sphere",
+            "labelType": "color"
+        },
+        {
+            "name": "Neptune",
+            "color": "0xFF0000EE",
+            "colorName": "Blue",
+            "classOrbitalTime": 684,
+            "startPosition": 281,
+            "representation": "sphere",
+            "labelType": "color"
+        },
+        {
+            "name": "Pluto",
+            "color": "0xFF9900CC",
+            "colorName": "Purple",
+            "classOrbitalTime": 1030,
+            "startPosition": 321,
+            "representation": "sphere",
+            "labelType": "color"
+        }
+    ]
+}

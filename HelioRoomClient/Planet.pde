@@ -73,33 +73,10 @@ public class Planet {
   public String getLabelType() {
     return labelType;
   }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public void setColor(String colorValue) {
-    this.colorValue = colorValue;
-  }
-
-  public void setColorName(String colorName) {
-    this.colorName = colorName;
-  }
-
-  public void setClassOrbitalTime(double classOrbitalTime) {
-    this.classOrbitalTime = classOrbitalTime;
-  }
-
-  public void setStartPosition(double startPosition) {
-    this.startPosition = startPosition;
-  }  
   
-  public void setRepresentation(String representation) {
-    this.representation = representation;
-  }
   
-  public void setLabelType(String labelType) {
-    this.labelType = labelType;
+  public void adjustOrbitalTime(int multiplier) {
+    this.classOrbitalTime *= multiplier;
   }
 
 }

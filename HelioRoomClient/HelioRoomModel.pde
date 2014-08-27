@@ -50,6 +50,10 @@ public class HelioRoomModel {
     startTime = json.getInt("startTime");
     state = parseState(json.getString("state"));
     planets = parsePlanets(json.getJSONArray("planets"));
+    // Adjust orbital times
+    int multiplier = json.getInt("multiplier");
+    for (Planet pl: planets)
+      pl.adjustOrbitalTime(multiplier);
   }
   
   

@@ -1,11 +1,7 @@
 import controlP5.*;
 
-import org.apache.commons.net.ntp.NTPUDPClient;
-import org.apache.commons.net.ntp.TimeInfo;
 import java.util.*;
 import java.text.DecimalFormat;
-import java.net.InetAddress;
-import java.net.SocketException;
 
 // Model
 HelioRoomModel hr = null;
@@ -47,7 +43,7 @@ public void setup() {
   loadImages();
   // More setup
   setupGUI();        
-  updateTime();
+  //  updateTime();
   // Initialize FPS counters
   fps_size = 30;
   fps_samples = new double[fps_size];
@@ -238,34 +234,5 @@ private void loadImages() {
   images.put("Saturn", loadImage("helioroom_resources/planets/saturn.png"));
   images.put("Uranus", loadImage("helioroom_resources/planets/uranus.png"));
   images.put("Venus", loadImage("helioroom_resources/planets/venus.png"));
-}
-
-
-private void updateTime() {
-  NTPUDPClient client = new NTPUDPClient();
-  // We want to timeout if a response takes longer than 3 seconds
-  client.setDefaultTimeout(3000);
-  try {
-    client.open();
-    try {
-      InetAddress hostAddr = InetAddress.getByName("us.pool.ntp.org");
-      TimeInfo t = client.getTime(hostAddr);
-      t.computeDetails();
-      timeOffset = t.getOffset();
-      if (timeOffset > 0) 
-        println("The clock on this computer runs " + timeOffset + " ms late.");
-      else
-        println("The clock on this computer is " + -timeOffset + " ms ahead.");
-    } 
-    catch (IOException ioe) {
-      return;
-    }
-  } 
-  catch (SocketException e) {
-    return;
-  } finally {
-    client.close();
-  }
-  
 }
 

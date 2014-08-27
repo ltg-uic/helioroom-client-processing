@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>HelioRoom client</title>
+	<script src="bower_components/Processing.js/processing.js" type="text/javascript" charset="utf-8"></script>
+	<script src="Planet.js" type="text/javascript" charset="utf-8"></script>
+	<script src="HelioRoomModel.js" type="text/javascript" charset="utf-8"></script>
+	<script src="HelioRoom.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+	<canvas id="sketch"></canvas>
+	<script type="text/javascript">
+	var canvas = document.getElementById("sketch");
+	var processingInstance = new Processing(canvas, HelioRoomSketch); // if lost: Processing.getInstanceById('sketch').hr
+	</script>
+</body>
+</html>

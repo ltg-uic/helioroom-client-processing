@@ -1,0 +1,21 @@
+{
+  "name": "helioroom-js",
+  "version": "0.1.0",
+  "homepage": "https://github.com/ltg-uic/hr-phen-processing-client",
+  "description": "JS helioroom client",
+  "main": "index.html",
+  "authors": [
+    "Alessandro Gnoli"
+  ],
+  "license": "MIT",
+	"dependencies": {
+		"Processing.js": "1.4.8"	
+	},
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

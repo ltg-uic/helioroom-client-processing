@@ -9,7 +9,7 @@ function HelioRoomSketch(processing) {
 	var deg_to_px_ratio;
 	var labelsFont;
 	// FPS indicator
-	var FPS = false;
+	FPS = false;
 	var fps_total = 0;
 	var fps_index = 0;
 	var fps_size = 30;

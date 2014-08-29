@@ -4,6 +4,8 @@ function HelioRoomModel(json) {
 	this.state = json.state;
 	this.planets = HelioRoomModel.parsePlanets(json.planets);
 	
+	this.viewAngleBegin = 0; //TODO these are stubs!!!
+	this.viewAngleEnd = 45;
 }
  
 HelioRoomModel.prototype.getViewAngle = function() {

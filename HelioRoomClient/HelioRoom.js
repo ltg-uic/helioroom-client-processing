@@ -5,7 +5,9 @@ function HelioRoomSketch(processing) {
 	// Sketch
 	var prev_ts = 0;
 	var images = {}
-	// this.timeOffset = 0;
+	var planet_diameter;
+	var deg_to_px_ratio;
+	var labelsFont;
 	// FPS indicator
 	var FPS = false;
 	var fps_total = 0;
@@ -18,6 +20,7 @@ function HelioRoomSketch(processing) {
 		hr = new HelioRoomModel(HelioRoomSketch.getConfigJSON("helioroom_resources/config.json"));
 		// Sketch
 		processing.size(screen.width, screen.height);
+		labelsFont = processing.createFont("Helvetica", 96, true)
 		processing.loadImages();
 	  // Initialize FPS counters
 		for (i=0; i<fps_size; i++) { 
@@ -38,13 +41,107 @@ function HelioRoomSketch(processing) {
 	  cur_ts = new Date().getTime();
 	  dt = cur_ts + hr.startTime*1000;
 	  // Draw planets and labels
-	  // drawPlanets(dt);
+	  processing.drawPlanets(dt);
 	  // Print framerate
 	  if (FPS)
 	    processing.printFramerate(cur_ts);
 	  prev_ts = cur_ts;
 	};
 	
+	
+	/*
+	 * Draws the background
+	 */
+	processing.drawTiledStarsBackground = function() {
+	  processing.imageMode(processing.CORNER);
+		o_rep = Math.floor(screen.width / images.background.width);
+		v_rep = Math.floor(screen.height / images.background.height);
+		if (o_rep == Number.POSITIVE_INFINITY || v_rep == Number.POSITIVE_INFINITY) return;
+	  for (j=0; j<=v_rep; j++)
+			for (i=0; i<=o_rep; i++)
+				processing.image(images.background, i*images.background.width, j*images.background.height, images.background.width, images.background.height);
+	}
+	
+	
+	/*
+	 * Draws all the planets
+	 */
+	processing.drawPlanets = function(dt) {
+	  // Remember: dt is in milliseconds since the beginning of the simulation, NOT the launch of the app
+	  // Calculate diameter
+	  planet_diameter = .6 * processing.height;
+	  // Calculate degree to pixels ratio based on the current view angle
+	  deg_to_px_ratio = processing.width / hr.getViewAngle();
+	  // For each planet...
+		hr.planets.forEach(function(pl, i) {
+			processing.drawPlanet(dt, pl);
+		});
+	}
+	
+	
+	/*
+	 * Draws a single planets
+	 */
+	processing.drawPlanet = function (dt, p) {
+	  // Get planet color
+	  var pc = processing.unhex(p.color.substring(2));
+	  processing.fill(pc);
+	  // Calculate planet x and y coordinates
+	  var x = processing.calculatePlanetPosition(p.startPosition, p.classOrbitalTime, dt);
+	  var y = processing.height / 2;
+	  // If planet is outside of screen we don't need to draw it
+	  if (x < -planet_diameter/2 - 10 || x > processing.width + planet_diameter/2 + 10)
+	    return;
+	  // Choose planet representation
+	  processing.imageMode(processing.CENTER);
+		var i;
+	  if (p.representation=="sphere")
+	    i = images[p.colorName];  // Colored sphere image
+	  else if (p.representation=="image")
+	    i = images[p.name];  // Planet image 
+	  else {
+	    console.error("No such a representation for the planet. Choose: sphere or image");
+	    return;
+	  }
+	  // Calculate planet size
+	  p_h = planet_diameter;
+		
+	  if (i===undefined)
+	    return;
+	  p_w = p_h*(i.width/i.height);
+	  // Draw planet
+	  processing.image(i, x, y, p_w, p_h);
+	  // Draw label
+	  if (p.labelType=="none")
+	    return;
+	  l_x = x;
+	  processing.textFont(labelsFont);
+	  processing.fill(0);
+	  processing.textAlign(processing.CENTER, processing.CENTER);
+	  if (p.labelType=="name")
+			processing.text(p.name.toUpperCase(), l_x, processing.height/2);
+		if (p.labelType=="color")
+			processing.text(p.colorName.toUpperCase(), l_x, processing.height/2);
+	}
+	
+	
+	/*
+	 * Calculates the position of a single planet
+	 */
+	processing.calculatePlanetPosition = function (deg_0, classOrbitalTime, dt) {
+	  // Position in degrees
+	  var deg = (deg_0 + .006 * dt / classOrbitalTime) % 360;
+	  // Displacement (in deg) from viewAngleEnd (left side of the screen)
+	  var deg_displ = hr.viewAngleEnd - deg;
+	  if (deg_displ < -180)
+	    deg_displ = 360 + deg_displ;
+	  return deg_displ * deg_to_px_ratio;
+	}
+	
+	
+	/*
+	 * Prints the current framerate 
+	 */
 	processing.printFramerate = function(cur_ts) {
 		fps_total -= fps_samples[fps_index];
 	  fps_samples[fps_index] = 1000/(cur_ts - prev_ts);
@@ -56,15 +153,6 @@ function HelioRoomSketch(processing) {
 	  processing.text(framerate + " fps", screen.width - 200, 50);	
 	}
 	
-	processing.drawTiledStarsBackground = function() {
-	  processing.imageMode(processing.CORNER);
-		o_rep = Math.floor(screen.width / images.background.width);
-		v_rep = Math.floor(screen.height / images.background.height);
-		if (o_rep == Number.POSITIVE_INFINITY || v_rep == Number.POSITIVE_INFINITY) return;
-	  for (j=0; j<=v_rep; j++)
-			for (i=0; i<=o_rep; i++)
-				processing.image(images.background, i*images.background.width, j*images.background.height, images.background.width, images.background.height);
-	}
 	
 	/*
 	  @pjs preload = 	
@@ -112,7 +200,9 @@ function HelioRoomSketch(processing) {
 	
 }
 
-
+/*
+ * Loads json configuration from the server
+ */
 HelioRoomSketch.getConfigJSON = function(url) {
 	request = new XMLHttpRequest();
 	request.open('GET', url, false);

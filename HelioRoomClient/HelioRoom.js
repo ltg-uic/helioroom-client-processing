@@ -69,7 +69,6 @@ function HelioRoomSketch(p) {
 			config_json.viewAngleBegin = p.viewAngleBegin
 			config_json.viewAngleEnd = p.viewAngleEnd
 		}
-		console.log(config_json)
 		hr = new HelioRoomModel(config_json);
 	}
 	

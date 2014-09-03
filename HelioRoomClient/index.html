@@ -13,10 +13,10 @@
 	</style>
 </head>
 <body>
-	<canvas id="sketch" width="800" height="600"></canvas>
+	<canvas id="sketch"></canvas>
 	<script type="text/javascript">
 	var canvas = document.getElementById("sketch");
-	var processingInstance = new Processing(canvas, HelioRoomSketch, {viewAngleBegin: 0, viewAngleEnd: 45});
+	var processingInstance = new Processing(canvas, HelioRoomSketch, {fullscreen:true, viewAngleBegin: 0, viewAngleEnd: 45});
 	</script>
 </body>
 </html>

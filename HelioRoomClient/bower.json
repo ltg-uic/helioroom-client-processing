@@ -9,7 +9,7 @@
   ],
   "license": "MIT",
 	"dependencies": {
-		"Processing.js": "1.4.8"	
+		"Processing.js": "1.4.8"
 	},
   "ignore": [
     "**/.*",

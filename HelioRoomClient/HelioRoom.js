@@ -1,4 +1,4 @@
-function HelioRoomSketch(processing) {
+function HelioRoomSketch(p) {
 	
 	// Model
 	var hr;
@@ -8,6 +8,7 @@ function HelioRoomSketch(processing) {
 	var planet_diameter;
 	var deg_to_px_ratio;
 	var labelsFont;
+	var wrongAspectRatio;
 	// FPS indicator
 	FPS = false;
 	var fps_total = 0;
@@ -16,12 +17,11 @@ function HelioRoomSketch(processing) {
 	var fps_samples = new Array(fps_size);
 	
 	
-	processing.setup = function() {
-		hr = new HelioRoomModel(HelioRoomSketch.getConfigJSON("helioroom_resources/config.json"));
-		// Sketch
-		processing.size(screen.width, screen.height);
-		labelsFont = processing.createFont("Helvetica", 96, true)
-		processing.loadImages();
+	p.setup = function() {
+		p.initializeHRModel();
+		p.setSketchSize();
+		labelsFont = p.createFont("Helvetica", Math.floor(p.height/9.6+2.38), true);
+		p.loadImages();
 	  // Initialize FPS counters
 		for (i=0; i<fps_size; i++) { 
 		    fps_samples[i] = 0;
@@ -29,52 +29,95 @@ function HelioRoomSketch(processing) {
 	};
 	
 	
-	processing.draw = function() {
+	p.draw = function() {
 	  // If there is no data in the model draw a black background and return
 	  if (!hr.initialized) {
-	    processing.background(0);
+	    p.background(0);
 	    return;
 	  }
+		if (wrongAspectRatio) {
+			p.background(255);
+		  p.textSize(18);
+		  p.fill(255, 0, 0);	
+			p.text("Helioroom cannot run in a canvas with an aspect ratio less than 4/3!", 10, 30);
+			return;
+		}
 	  // Draw stars
-	  processing.drawTiledStarsBackground();
+	  p.drawTiledStarsBackground();
 	  // Calculate dt (in ms)
 	  cur_ts = new Date().getTime();
 	  dt = cur_ts + hr.startTime*1000;
 	  // Draw planets and labels
-	  processing.drawPlanets(dt);
+	  p.drawPlanets(dt);
 	  // Print framerate
 	  if (FPS)
-	    processing.printFramerate(cur_ts);
+	    p.printFramerate(cur_ts);
 	  prev_ts = cur_ts;
 	};
 	
 	
 	/*
+	 * Sets the sketch size
+	 */
+	p.initializeHRModel = function() {
+		config_json = HelioRoomSketch.getConfigJSON("helioroom_resources/config.json")
+		if (p.viewAngleBegin===undefined || p.viewAngleEnd===undefined) {
+			console.warn("Assigning a defaul window of 45º from 0º to 45º! Pass '{viewAngleBegin: 0, viewAngleEnd: 45}' to the sketch to get rid of this warning.")
+			config_json.viewAngleBegin = 0
+			config_json.viewAngleEnd = 45
+		} else {
+			config_json.viewAngleBegin = p.viewAngleBegin
+			config_json.viewAngleEnd = p.viewAngleEnd
+		}
+		console.log(config_json)
+		hr = new HelioRoomModel(config_json);
+	}
+	
+	
+	
+	/*
+	 * Sets the sketch size
+	 */
+	p.setSketchSize = function() {
+		if (p.fullscreen)
+			p.size(screen.width, screen.height);
+		else
+			p.size(canvas.width, canvas.height);
+		if (canvas.width/canvas.height >= 4/3) {
+			wrongAspectRatio = false;
+		} else {
+			wrongAspectRatio = true;
+			console.error("Helioroom cannot run in a canvas with an aspect ratio less than 4/3!");
+		}
+	}
+	
+	
+	/*
 	 * Draws the background
 	 */
-	processing.drawTiledStarsBackground = function() {
-	  processing.imageMode(processing.CORNER);
+	p.drawTiledStarsBackground = function() {
+	  p.imageMode(p.CORNER);
 		o_rep = Math.floor(screen.width / images.background.width);
 		v_rep = Math.floor(screen.height / images.background.height);
 		if (o_rep == Number.POSITIVE_INFINITY || v_rep == Number.POSITIVE_INFINITY) return;
 	  for (j=0; j<=v_rep; j++)
 			for (i=0; i<=o_rep; i++)
-				processing.image(images.background, i*images.background.width, j*images.background.height, images.background.width, images.background.height);
+				p.image(images.background, i*images.background.width, j*images.background.height, images.background.width, images.background.height);
 	}
 	
 	
 	/*
 	 * Draws all the planets
 	 */
-	processing.drawPlanets = function(dt) {
+	p.drawPlanets = function(dt) {
 	  // Remember: dt is in milliseconds since the beginning of the simulation, NOT the launch of the app
 	  // Calculate diameter
-	  planet_diameter = .6 * processing.height;
+	  planet_diameter = .6 * p.height;
 	  // Calculate degree to pixels ratio based on the current view angle
-	  deg_to_px_ratio = processing.width / hr.getViewAngle();
+	  deg_to_px_ratio = p.width / hr.getViewAngle();
 	  // For each planet...
 		hr.planets.forEach(function(pl, i) {
-			processing.drawPlanet(dt, pl);
+			p.drawPlanet(dt, pl);
 		});
 	}
 	
@@ -82,23 +125,23 @@ function HelioRoomSketch(processing) {
 	/*
 	 * Draws a single planets
 	 */
-	processing.drawPlanet = function (dt, p) {
+	p.drawPlanet = function (dt, pl) {
 	  // Get planet color
-	  var pc = processing.unhex(p.color.substring(2));
-	  processing.fill(pc);
+	  var pc = p.unhex(pl.color.substring(2));
+	  p.fill(pc);
 	  // Calculate planet x and y coordinates
-	  var x = processing.calculatePlanetPosition(p.startPosition, p.classOrbitalTime, dt);
-	  var y = processing.height / 2;
+	  var x = p.calculatePlanetPosition(pl.startPosition, pl.classOrbitalTime, dt);
+	  var y = p.height / 2;
 	  // If planet is outside of screen we don't need to draw it
-	  if (x < -planet_diameter/2 - 10 || x > processing.width + planet_diameter/2 + 10)
+	  if (x < -planet_diameter/2 - 10 || x > p.width + planet_diameter/2 + 10)
 	    return;
 	  // Choose planet representation
-	  processing.imageMode(processing.CENTER);
+	  p.imageMode(p.CENTER);
 		var i;
-	  if (p.representation=="sphere")
-	    i = images[p.colorName];  // Colored sphere image
-	  else if (p.representation=="image")
-	    i = images[p.name];  // Planet image 
+	  if (pl.representation=="sphere")
+	    i = images[pl.colorName];  // Colored sphere image
+	  else if (pl.representation=="image")
+	    i = images[pl.name];  // Planet image 
 	  else {
 	    console.error("No such a representation for the planet. Choose: sphere or image");
 	    return;
@@ -110,25 +153,25 @@ function HelioRoomSketch(processing) {
 	    return;
 	  p_w = p_h*(i.width/i.height);
 	  // Draw planet
-	  processing.image(i, x, y, p_w, p_h);
+	  p.image(i, x, y, p_w, p_h);
 	  // Draw label
-	  if (p.labelType=="none")
+	  if (pl.labelType=="none")
 	    return;
 	  l_x = x;
-	  processing.textFont(labelsFont);
-	  processing.fill(0);
-	  processing.textAlign(processing.CENTER, processing.CENTER);
-	  if (p.labelType=="name")
-			processing.text(p.name.toUpperCase(), l_x, processing.height/2);
-		if (p.labelType=="color")
-			processing.text(p.colorName.toUpperCase(), l_x, processing.height/2);
+	  p.textFont(labelsFont);
+	  p.fill(0);
+	  p.textAlign(p.CENTER, p.CENTER);
+	  if (pl.labelType=="name")
+			p.text(pl.name.toUpperCase(), l_x, p.height/2);
+		if (pl.labelType=="color")
+			p.text(pl.colorName.toUpperCase(), l_x, p.height/2);
 	}
 	
 	
 	/*
 	 * Calculates the position of a single planet
 	 */
-	processing.calculatePlanetPosition = function (deg_0, classOrbitalTime, dt) {
+	p.calculatePlanetPosition = function (deg_0, classOrbitalTime, dt) {
 	  // Position in degrees
 	  var deg = (deg_0 + .006 * dt / classOrbitalTime) % 360;
 	  // Displacement (in deg) from viewAngleEnd (left side of the screen)
@@ -142,15 +185,15 @@ function HelioRoomSketch(processing) {
 	/*
 	 * Prints the current framerate 
 	 */
-	processing.printFramerate = function(cur_ts) {
+	p.printFramerate = function(cur_ts) {
 		fps_total -= fps_samples[fps_index];
 	  fps_samples[fps_index] = 1000/(cur_ts - prev_ts);
 	  fps_total += 1000/(cur_ts - prev_ts);
 	  if (++fps_index == fps_size) fps_index = 0; 
-	  processing.textSize(32);
-	  processing.fill(255, 0, 0);
+	  p.textSize(32);
+	  p.fill(255, 0, 0);
 		framerate = Math.floor(fps_total / fps_size);
-	  processing.text(framerate + " fps", screen.width - 200, 50);	
+	  p.text(framerate + " fps", screen.width - 200, 50);	
 	}
 	
 	
@@ -174,28 +217,28 @@ function HelioRoomSketch(processing) {
 	"helioroom_resources/planets/uranus.png",
 	"helioroom_resources/planets/venus.png";
 	*/
-	processing.loadImages = function() {
+	p.loadImages = function() {
 		// Background
 		images = {};
-		images.background = processing.loadImage("helioroom_resources/stars2.jpeg");
+		images.background = p.loadImage("helioroom_resources/stars2.jpeg");
 		// Spheres
-		images.Blue = processing.loadImage("helioroom_resources/colors/blue.png");
-		images.Brown = processing.loadImage("helioroom_resources/colors/brown.png");
-		images.Gray= processing.loadImage("helioroom_resources/colors/gray.png");
-		images.Green = processing.loadImage("helioroom_resources/colors/green.png");
-		images.Orange = processing.loadImage("helioroom_resources/colors/orange.png");
-		images.Pink = processing.loadImage("helioroom_resources/colors/pink.png");
-		images.Red = processing.loadImage("helioroom_resources/colors/red.png");
-		images.Yellow = processing.loadImage("helioroom_resources/colors/yellow.png");
+		images.Blue = p.loadImage("helioroom_resources/colors/blue.png");
+		images.Brown = p.loadImage("helioroom_resources/colors/brown.png");
+		images.Gray= p.loadImage("helioroom_resources/colors/gray.png");
+		images.Green = p.loadImage("helioroom_resources/colors/green.png");
+		images.Orange = p.loadImage("helioroom_resources/colors/orange.png");
+		images.Pink = p.loadImage("helioroom_resources/colors/pink.png");
+		images.Red = p.loadImage("helioroom_resources/colors/red.png");
+		images.Yellow = p.loadImage("helioroom_resources/colors/yellow.png");
 		// Planets
-		images.Earth = processing.loadImage("helioroom_resources/planets/earth.png");
-		images.Jupiter = processing.loadImage("helioroom_resources/planets/jupiter.png");
-		images.Mars = processing.loadImage("helioroom_resources/planets/mars.png");
-		images.Mercury= processing.loadImage("helioroom_resources/planets/mercury.png");
-		images.Neptune = processing.loadImage("helioroom_resources/planets/neptune.png");
-		images.Saturn = processing.loadImage("helioroom_resources/planets/saturn.png");
-		images.Uranus = processing.loadImage("helioroom_resources/planets/uranus.png");
-		images.Venus = processing.loadImage("helioroom_resources/planets/venus.png");
+		images.Earth = p.loadImage("helioroom_resources/planets/earth.png");
+		images.Jupiter = p.loadImage("helioroom_resources/planets/jupiter.png");
+		images.Mars = p.loadImage("helioroom_resources/planets/mars.png");
+		images.Mercury= p.loadImage("helioroom_resources/planets/mercury.png");
+		images.Neptune = p.loadImage("helioroom_resources/planets/neptune.png");
+		images.Saturn = p.loadImage("helioroom_resources/planets/saturn.png");
+		images.Uranus = p.loadImage("helioroom_resources/planets/uranus.png");
+		images.Venus = p.loadImage("helioroom_resources/planets/venus.png");
 	}
 	
 }
